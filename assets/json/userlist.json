@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Test Data",
+    "sex": "Male",
+    "birthlong": 80.648,
+    "birthlat": 16.5062,
+    "birthsunrise": "6.31 AM",
+    "birthsunset": "6.31 PM",
+    "description": "Not Used",
+    "birthdttm": "1900-01-01 00:00:00.000",
+    "planetpos": " ",
+    "planetspeed": " ",
+    "transitpos": " ",
+    "transitspeed": " "
+  }
+]

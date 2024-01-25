@@ -1,0 +1,164 @@
+[
+  {
+    "name": "Ashwini",
+    "degend": 13.3333,
+    "lord": "Ketu",
+    "deity": "Ashwini"
+  },
+  {
+    "name": "Bharani",
+    "degend": 26.6667,
+    "lord": "Shukra",
+    "deity": "Yama"
+  },
+  {
+    "name": "Krutika",
+    "degend": 40.0001,
+    "lord": "Ravi",
+    "deity": "Agni"
+  },
+  {
+    "name": "Rohini",
+    "degend": 53.3333,
+    "lord": "Chandra",
+    "deity": "Bramha"
+  },
+  {
+    "name": "Mrigasira",
+    "degend": 66.6667,
+    "lord": "Kuja",
+    "deity": "Chandra"
+  },
+  {
+    "name": "Arudra",
+    "degend": 80.0001,
+    "lord": "Rahu",
+    "deity": "Shiva"
+  },
+  {
+    "name": "Punarvasu",
+    "degend": 93.3333,
+    "lord": "Guru",
+    "deity": "Aditi"
+  },
+  {
+    "name": "Pushya",
+    "degend": 106.6667,
+    "lord": "Shani",
+    "deity": "Guru"
+  },
+  {
+    "name": "Aslesha",
+    "degend": 120.0001,
+    "lord": "Budha",
+    "deity": "Rahu"
+  },
+  {
+    "name": "Magha",
+    "degend": 133.3333,
+    "lord": "Ketu",
+    "deity": "Ravi"
+  },
+  {
+    "name": "Purva Phalguni",
+    "degend": 146.6667,
+    "lord": "Shukra",
+    "deity": "Aryaman"
+  },
+  {
+    "name": "Uttara Phalguni",
+    "degend": 160.0001,
+    "lord": "Ravi",
+    "deity": "Ravi"
+  },
+  {
+    "name": "Hastha",
+    "degend": 173.3333,
+    "lord": "Chandra",
+    "deity": "Vishwakarma"
+  },
+  {
+    "name": "Chitra",
+    "degend": 186.6667,
+    "lord": "Kuja",
+    "deity": "Vaayu"
+  },
+  {
+    "name": "Swathi",
+    "degend": 200.0001,
+    "lord": "Rahu",
+    "deity": "Indra"
+  },
+  {
+    "name": "Vishaka",
+    "degend": 213.3333,
+    "lord": "Guru",
+    "deity": "Mitra"
+  },
+  {
+    "name": "Anuradha",
+    "degend": 226.6667,
+    "lord": "Shani",
+    "deity": "Indra"
+  },
+  {
+    "name": "Jyeshta",
+    "degend": 240.0001,
+    "lord": "Budha",
+    "deity": "Nirriti"
+  },
+  {
+    "name": "Mula",
+    "degend": 253.3333,
+    "lord": "Ketu",
+    "deity": "Varuna"
+  },
+  {
+    "name": "Purva Ashada",
+    "degend": 266.6667,
+    "lord": "Shukra",
+    "deity": "Viswadeva"
+  },
+  {
+    "name": "Uttara Ashada",
+    "degend": 280.0001,
+    "lord": "Ravi",
+    "deity": "Bramha"
+  },
+  {
+    "name": "Shravana",
+    "degend": 293.3333,
+    "lord": "Chandra",
+    "deity": "Vishni"
+  },
+  {
+    "name": "Dhanishta",
+    "degend": 306.6667,
+    "lord": "Kuja",
+    "deity": "Vasu"
+  },
+  {
+    "name": "Shatabishi",
+    "degend": 320.0001,
+    "lord": "Rahu",
+    "deity": "Varuna"
+  },
+  {
+    "name": "Purva Bhadrapada",
+    "degend": 333.3333,
+    "lord": "Guru",
+    "deity": "Ajacharana"
+  },
+  {
+    "name": "Uttara Bhadrapad",
+    "degend": 346.6667,
+    "lord": "Shani",
+    "deity": "Abhirbudhanya"
+  },
+  {
+    "name": "Revati",
+    "degend": 360.0001,
+    "lord": "Budha",
+    "deity": "Pooshan"
+  }
+]

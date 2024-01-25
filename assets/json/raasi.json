@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Mesha",
+    "degend": 30,
+    "lord": "Kuja",
+    "shortname": "Ar"
+  },
+  {
+    "name": "Vrishabha",
+    "degend": 60,
+    "lord": "Shukra",
+    "shortname": "Ta"
+  },
+  {
+    "name": "Mithuna",
+    "degend": 90,
+    "lord": "Budha",
+    "shortname": "Ge"
+  },
+  {
+    "name": "Karkataka",
+    "degend": 120,
+    "lord": "Chandra",
+    "shortname": "Ca"
+  },
+  {
+    "name": "Simha",
+    "degend": 150,
+    "lord": "Ravi",
+    "shortname": "Le"
+  },
+  {
+    "name": "Kanya",
+    "degend": 180,
+    "lord": "Budha",
+    "shortname": "Vi"
+  },
+  {
+    "name": "Tula",
+    "degend": 210,
+    "lord": "Shukra",
+    "shortname": "Li"
+  },
+  {
+    "name": "Vrischika",
+    "degend": 240,
+    "lord": "Kuja",
+    "shortname": "Sc"
+  },
+  {
+    "name": "Dhanu",
+    "degend": 270,
+    "lord": "Guru",
+    "shortname": "Sg"
+  },
+  {
+    "name": "Makara",
+    "degend": 300,
+    "lord": "Shani",
+    "shortname": "Cp"
+  },
+  {
+    "name": "Khumbha",
+    "degend": 330,
+    "lord": "Shani",
+    "shortname": "Aq"
+  },
+  {
+    "name": "Meena",
+    "degend": 360,
+    "lord": "Guru",
+    "shortname": "Pi"
+  }
+]

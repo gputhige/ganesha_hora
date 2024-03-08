@@ -9,7 +9,7 @@ import '../utils/databasehelper.dart';
 
 class BasicsScreen extends StatefulWidget {
   final UserData user;
-  final List<double> planetPrg;
+  final List<Map<String, dynamic>> planetPrg;
   const BasicsScreen({Key? key, required this.user, required this.planetPrg})
       : super(key: key);
 
@@ -60,7 +60,7 @@ class _BasicsScreenState extends State<BasicsScreen>
     if (raasi.isNotEmpty) {
       for (int i = 0; i < raasi.length; i++) {}
     }
-    var amsa = await _getAmsa();
+    var amsa = await _getAmsaRuler();
     return 0;
   }
 
@@ -72,12 +72,8 @@ class _BasicsScreenState extends State<BasicsScreen>
     var sec = (res2 - (((res2 / 100).truncate()) * 100));
   }
 
-  _getAmsa() async {
-    print(widget.planetPrg.toList());
-
-    widget.planetPrg.sort();
-
-    print('Get Amsa Progress ${widget.planetPrg.toList()}');
+  _getAmsaRuler() async {
+    widget.planetPrg.sort((a, b) => (b['_pos']).compareTo(a['_pos']));
   }
 
   @override
@@ -280,7 +276,8 @@ class _BasicsScreenState extends State<BasicsScreen>
                           DataCell(textBlock('One', 1)),
                           DataCell(textBlock('One', 1)),
                           DataCell(textBlock('One', 1)),
-                          DataCell(textBlock('One', 1)),
+                          DataCell(
+                              textBlock('${widget.planetPrg[i]['_pos']}', 1)),
                         ])
                     ],
                   )),

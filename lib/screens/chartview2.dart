@@ -28,16 +28,28 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
   final dbHelper = DatabaseHelper.db;
   double blockOne = 0, screenwd = 0, screenht = 0;
   Future? future;
+  bool arudaVisible = false;
   double moonloc = 0, sunloc = 0;
   int asc = 0, secondblock = 0;
-  int ascMovement = 0, divMovement = 0;
+  int ascMovement = 0,
+      divMovement = 0,
+      rasilord = 0,
+      rasilordord = 0,
+      rasilordIn = 0,
+      dist = 0;
+
   double angle = -90 * math.pi / 180;
   List<double> radians = [];
-  final List<double> _planetPos = [], _planetSpeed = [];
+  final List<double> _planetPos = [],
+      _planetSpeed = [],
+      _arudaRasi = [],
+      _arudaDiv = [];
   final List<int> _planetIn = [];
   List<double> divPos = [], _planetPrg = [];
   List<double> _transitPos = [], _transitSpeed = [];
+  List<Map<String, dynamic>> _planetsPosIndexed = [];
   UserData? userdata;
+  List<Raasi> rasi = [];
   String chartno = '';
   @override
   void initState() {
@@ -52,6 +64,8 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
     screenht = prefs.get('Height') as double;
     blockOne = screenht;
 
+    rasi = await dbHelper.getRaasiList();
+
     String planetPos = widget.user.planetpos.toString();
     String planetSpd = widget.user.planetspeed.toString();
     String transitPos = widget.user.transitpos.toString();
@@ -61,6 +75,8 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
     _planetSpeed.clear();
     _transitPos.clear();
     _transitSpeed.clear();
+    _planetsPosIndexed.clear();
+    _arudaRasi.clear();
 
     //update Planet/Transit Data
     for (int i = 0; i < 10; i++) {
@@ -75,6 +91,8 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
       _transitSpeed.add(_tspd);
       _planetIn.add(((_ppos ~/ 30).ceil()));
       _planetPrg.add((_planetPos[i] - (_planetIn[i] * 30)));
+      _planetsPosIndexed
+          .add({'_id': '$i', '_pos': (_ppos - (_planetIn[i] * 30))});
     }
 
     userdata = UserData(
@@ -100,8 +118,31 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
 
     //Calculate Div Charts;
     var res = await _divchart(10);
-    if (res != 0) {}
+    if (res == 0) {
+      _getDivArudas();
+    }
 
+    //Calculate Aruda Paadas
+    for (int i = 0; i < 12; i++) {
+      rasilord = await _reduceRasi(ascMovement + i);
+      rasilordord = rasi[rasilord - 1].rasiorder!;
+      rasilordIn = _planetIn[rasilordord + 1] - 1;
+      dist = rasilordIn - i;
+      if (dist <= 0) {
+        dist = dist + 12;
+      }
+      dist = await _reduceRasi(dist + dist + i);
+      if (dist - i - 1 == 7 ||
+          dist - i + 12 - 1 == 7 ||
+          dist - i - 1 == 1 ||
+          dist - i + 12 - 1 == 1) {
+        dist = await _reduceRasi(dist + 10 - 1);
+      }
+      _arudaRasi.add(((dist * 30)).toDouble());
+    }
+
+    var res1 = await _spreadGrahas(_arudaRasi);
+    if (res1.isNotEmpty) {}
     return 0;
   }
 
@@ -250,6 +291,39 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
                                     ),
                                   ),
                                 ),
+                              for (var i = 0; i < 12; i++)
+                                arudaVisible == true
+                                    ? Positioned(
+                                        top: Offset.fromDirection(
+                                                (degreeToRadian(-15 +
+                                                        (ascMovement * 30) -
+                                                        90)) +
+                                                    (degreeToRadian(
+                                                        _arudaRasi[i] * -1)) +
+                                                    6.25,
+                                                200)
+                                            .dy,
+                                        left: Offset.fromDirection(
+                                                (degreeToRadian(-15 +
+                                                        (ascMovement * 30) -
+                                                        90)) +
+                                                    (degreeToRadian(
+                                                        _arudaRasi[i] * -1)) +
+                                                    6.25,
+                                                200)
+                                            .dx,
+                                        width: screenwd * .55,
+                                        height: screenwd * .55,
+                                        child: SizedBox(
+                                          width: 25,
+                                          height: 25,
+                                          child: Image.asset(
+                                            'assets/planets/aruda$i.png',
+                                            scale: 6.5,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
                               for (var i = 0; i < 10; i++)
                                 Positioned(
                                   top: Offset.fromDirection(
@@ -279,6 +353,39 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
                                     ),
                                   ),
                                 ),
+                              for (var i = 0; i < 12; i++)
+                                arudaVisible == true
+                                    ? Positioned(
+                                        top: Offset.fromDirection(
+                                                (degreeToRadian(-15 +
+                                                        (divMovement * 30) -
+                                                        90)) +
+                                                    (degreeToRadian(
+                                                        _arudaDiv[i] * -1)) +
+                                                    6.25,
+                                                100)
+                                            .dy,
+                                        left: Offset.fromDirection(
+                                                (degreeToRadian(-15 +
+                                                        (divMovement * 30) -
+                                                        90)) +
+                                                    (degreeToRadian(
+                                                        _arudaDiv[i] * -1)) +
+                                                    6.25,
+                                                100)
+                                            .dx,
+                                        width: screenwd * .55,
+                                        height: screenwd * .55,
+                                        child: SizedBox(
+                                          width: 25,
+                                          height: 25,
+                                          child: Image.asset(
+                                            'assets/planets/aruda$i.png',
+                                            scale: 8.5,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
                               Positioned(
                                 top: screenht * .84,
                                 left: 10,
@@ -350,7 +457,7 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
                                   : secondblock == 0
                                       ? BasicsScreen(
                                           user: userdata!,
-                                          planetPrg: _planetPrg,
+                                          planetPrg: _planetsPosIndexed,
                                         )
                                       : GrahaAnalysis(
                                           planetPos: _planetPos,
@@ -374,54 +481,22 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
       setState(() {
         chartno = 'D09';
       });
+
       for (int i = 0; i < 10; i++) {
-        var newpos = 0;
         if (_planetIn[i] == 0 || _planetIn[i] == 4 || _planetIn[i] == 8) {
-          for (int j = 0; j < 11; j++) {
-            if (_planetPrg[i] < j * (30 / 9)) {
-              newpos = j + 0 - 1;
-              if (newpos > 12) newpos = newpos - 12;
-              divPos.add(newpos.toDouble() * 30);
-              break;
-            }
-          }
+          divPos.add((((_planetPrg[i] / 30 * 9)).floor() + 0) * 30);
         } else if (_planetIn[i] == 1 ||
             _planetIn[i] == 5 ||
             _planetIn[i] == 9) {
-          for (int j = 0; j < 11; j++) {
-            if (_planetPrg[i] < j * (30 / 9)) {
-              newpos = j + 9 - 1;
-              if (newpos > 12) newpos = newpos - 12;
-              divPos.add(newpos.toDouble() * 30);
-              break;
-            }
-          }
+          divPos.add((((_planetPrg[i] / 30 * 9)).floor() + 9) * 30);
         } else if (_planetIn[i] == 2 ||
             _planetIn[i] == 6 ||
             _planetIn[i] == 10) {
-          for (int j = 0; j < 11; j++) {
-            if (_planetPrg[i] < j * (30 / 9)) {
-              newpos = j + 6 - 1;
-              if (newpos > 12) newpos = newpos - 12;
-              divPos.add(newpos.toDouble() * 30);
-              print(
-                  'Planet: $i  In Navamsa:  $j Progress ${_planetPrg[i]} Planet Pos: ${_planetIn[i]} ');
-              break;
-            }
-          }
+          divPos.add((((_planetPrg[i] / 30 * 9)).floor() + 6) * 30);
         } else if (_planetIn[i] == 3 ||
             _planetIn[i] == 7 ||
             _planetIn[i] == 11) {
-          for (int j = 0; j < 11; j++) {
-            if (_planetPrg[i] < j * (30 / 9)) {
-              newpos = j + 3 - 1;
-              if (newpos > 12) newpos = newpos - 12;
-              divPos.add(newpos.toDouble() * 30);
-              print(
-                  'Planet: $i  In Navamsa:  $j Progress ${_planetPrg[i]} Planet Pos: ${_planetIn[i]} ');
-              break;
-            }
-          }
+          divPos.add((((_planetPrg[i] / 30 * 9)).floor() + 3) * 30);
         }
       }
     } else if (number == 10) {
@@ -479,7 +554,6 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
         counter = counter + 3;
       }
     }
-
 //Summarize number of planets in one Rasi - to space them within the Rasi
     var counts = divPos.fold<Map<dynamic, int>>({}, (map, element) {
       map[element] = (map[element] ?? 0) + 1;
@@ -487,7 +561,6 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
     });
 
     var entries = counts.entries.toList();
-
     for (int i = 0; i < entries.length; i++) {
       int counter = 1;
       for (int p = 0; p < entries[i].value; p++) {
@@ -508,6 +581,54 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
       divMovement = (divPos[0] ~/ 30);
     }
     return 0;
+  }
+
+  //Calculate Divisional Aruda Paadas
+  Future<int> _getDivArudas() async {
+    for (int i = 0; i < 12; i++) {
+      rasilord = await _reduceRasi(divMovement + i);
+      rasilordord = rasi[rasilord - 1].rasiorder!;
+      rasilordIn = _planetIn[rasilordord + 1] - 1;
+      dist = rasilordIn - i;
+      if (dist <= 0) {
+        dist = dist + 12;
+      }
+      dist = await _reduceRasi(dist + dist + i);
+      if (dist - i - 1 == 7 ||
+          dist - i + 12 - 1 == 7 ||
+          dist - i - 1 == 1 ||
+          dist - i + 12 - 1 == 1) {
+        dist = await _reduceRasi(dist + 10 - 1);
+      }
+      _arudaDiv.add(((dist * 30)).toDouble());
+    }
+
+    var res1 = await _spreadGrahas(_arudaDiv);
+    if (res1.isNotEmpty) {}
+    return 0;
+  }
+
+  Future<List<double>> _spreadGrahas(List<double> divPos) async {
+    var counts = divPos.fold<Map<dynamic, int>>({}, (map, element) {
+      map[element] = (map[element] ?? 0) + 1;
+      return map;
+    });
+    var entries = counts.entries.toList();
+    for (int i = 0; i < entries.length; i++) {
+      int counter = 1;
+      for (int p = 0; p < entries[i].value; p++) {
+        for (int j = 0; j < divPos.length; j++) {
+          if (divPos[j] == entries[i].key) {
+            divPos[j] = divPos[j] + (30 / ((entries[i].value + 1)) * counter);
+
+            counter = counter + 1;
+          }
+        }
+      }
+      counter = 1;
+    }
+
+    return divPos;
   }
 
 //Menu Widget to show options
@@ -568,6 +689,19 @@ class _ChartViewTwoState extends State<ChartViewTwo> {
                         padding: const EdgeInsets.all(8),
                         child: Text(
                           'Transit',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            // _divchart(24);
+                          });
+                          Navigator.pop(context);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          'Arudas',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onPressed: () {

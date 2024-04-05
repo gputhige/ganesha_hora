@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:parashara_hora/models/users.dart';
-import 'package:parashara_hora/utils/myfunctions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/raasi.dart';
 import '../models/userdata.dart';
 import '../ui/theme.dart';
 import '../utils/databasehelper.dart';
+import '../utils/myfunctions.dart';
+import '../models/upagrahas.dart';
 
 class BasicsScreen2 extends StatefulWidget {
   final Users user;
@@ -30,6 +31,7 @@ class _BasicsScreen2State extends State<BasicsScreen2>
   double screenht = 0, screenwd = 0;
   List<Color> colors = [Colors.black, Colors.white, Colors.amber];
   List<Map<String, Map<String, List<dynamic>>>> grahaData = [];
+  List<Upagrahas> upas = [];
   List<Map<String, dynamic>> sortList = [];
   List<String> degMinSec = [];
   List<String> grahas = [
@@ -68,6 +70,7 @@ class _BasicsScreen2State extends State<BasicsScreen2>
     'NA',
     'NA'
   ];
+  List<String> sunTimes = [];
   String dayOfWeek = '';
 
   @override
@@ -89,10 +92,13 @@ class _BasicsScreen2State extends State<BasicsScreen2>
     if (raasi.isNotEmpty) {
       for (int i = 0; i < raasi.length; i++) {}
     }
+    print('Step 2:');
     var res = await _getAmsaRuler();
     if (res == 0) {
+      print('Step 3:');
       var res1 = await _getUpagrahas();
       if (res1 == 0) {
+        print('Step 4:');
         return 0;
       }
     }
@@ -136,27 +142,36 @@ class _BasicsScreen2State extends State<BasicsScreen2>
   }
 
   Future<int> _getUpagrahas() async {
-    int birthtime =
-        await timeToSecs((widget.user.birthdttm!.substring(11, 21)));
-    print(birthtime);
-
-    int sunrse = await timeToSecs(widget.user.birthsunrise!.split(' ')[0]);
-    int sunset = await timeToSecs(widget.user.birthsunset!.split(' ')[0]);
-    print('SunRise SunSet: $sunrse ${sunset + (3600 * 12)}');
-    int day = sunset + (3600 * 12) - sunrse;
-    int ngt = sunrse + (3600 * 12) - sunset;
-    dayOfWeek =
-        DateFormat('EEEE').format(DateTime.parse(widget.user.birthdttm!));
-
-    if (birthtime > sunset) {
-      List<double> parts = List.generate(9, (index) => index * ngt / 8);
-      var result = parts.where((x) => (birthtime - (sunset + (3600 * 12))) > x);
-      var position = sunset + (3600 * 12) + parts[1];
-      var deg = position / birthtime * grahaData[1]['D01']!['Deg']![0];
-      print(deg);
-
-      print(position);
+    print('Birth Date Time: ${widget.user.birthdttm}');
+    upas = await dbHelper.getUpaList();
+    if ((widget.user.suntimes!.split(',')[1]) == '0') {
+      print(DateTime.parse(widget.user.birthdttm!)
+          .subtract(const Duration(days: 1))
+          .weekday);
+    } else if (widget.user.suntimes!.split(',')[1] == '1') {
+      print((DateTime.parse(widget.user.birthdttm!)).weekday);
+    } else {
+      print((DateTime.parse(widget.user.birthdttm!)).weekday);
     }
+
+    int birthtime =
+        await timeToSecs((widget.user.birthdttm!.substring(11, 19)));
+    print('Birth Time: $birthtime');
+    print(widget.user.suntimes);
+    print('Asc: ${widget.user.asctimes}');
+    print(int.parse(widget.user.suntimes!.split(',')[1]));
+    sunTimes.add(
+        await secToTimeStr(int.parse(widget.user.suntimes!.split(',')[1])));
+    sunTimes.add(
+        await secToTimeStr(int.parse(widget.user.suntimes!.split(',')[2])));
+    sunTimes.add(
+        await secToTimeStr(int.parse(widget.user.suntimes!.split(',')[3])));
+
+    /*  int sunrse = await timeToSecs(widget.user.birthsunrise!.split(' ')[0]);
+    int sunset = await timeToSecs(widget.user.birthsunset!.split(' ')[0]); */
+    /*  int sunrse = int.parse(widget.user.suntimes!);
+    int sunset = int.parse(widget.user.suntimes!); */
+    print('SunRise SunSet: ${sunTimes[0]} ${sunTimes[1]} ${sunTimes[2]}');
 
     return 0;
   }
@@ -259,7 +274,7 @@ class _BasicsScreen2State extends State<BasicsScreen2>
                                       textBlock('IST', 1),
                                       textBlock('NA', 1),
                                       textBlock(
-                                          '${widget.user.birthlong.toString()} / ${widget.user.birthlat.toString()}',
+                                          '${widget.user.birthlong!.toStringAsFixed(2)} / ${widget.user.birthlat!.toStringAsFixed(4)}',
                                           1),
                                       textBlock(
                                           grahaData[1]['D01']!['Deg']![0]
@@ -275,12 +290,8 @@ class _BasicsScreen2State extends State<BasicsScreen2>
                                       textBlock('NA', 1),
                                       textBlock('NA', 1),
                                       textBlock('NA', 1),
-                                      textBlock(
-                                          widget.user.birthsunrise!.toString(),
-                                          1),
-                                      textBlock(
-                                          widget.user.birthsunset!.toString(),
-                                          1),
+                                      textBlock(sunTimes[0], 1),
+                                      textBlock(sunTimes[1], 1),
                                       textBlock('NA', 1),
                                       textBlock('23.29472°', 1),
                                       textBlock('NA', 1),
@@ -422,16 +433,6 @@ class _BasicsScreen2State extends State<BasicsScreen2>
             text,
             style: paraBoldStyle,
           );
-  }
-
-  String _dateToString(DateTime indate) {
-    var outdate = DateFormat('dd-MM-yyyy').format(indate);
-    return outdate;
-  }
-
-  DateTime _stringToDate(String indate) {
-    var outdate = DateFormat('yyyy-MM-dd').parse(indate);
-    return outdate;
   }
 
   Widget _dataColumn(double wdth, double hgt, String txt, int txtstyl) {

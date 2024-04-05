@@ -266,11 +266,11 @@ class _BasicsScreenState extends State<BasicsScreen>
                                               textBlock('NA', 1),
                                               textBlock('NA', 1),
                                               textBlock(
-                                                  widget.user.birthsunrise!
+                                                  widget.user.suntimes!
                                                       .toString(),
                                                   1),
                                               textBlock(
-                                                  widget.user.birthsunset!
+                                                  widget.user.suntimes!
                                                       .toString(),
                                                   1),
                                               textBlock('NA', 1),

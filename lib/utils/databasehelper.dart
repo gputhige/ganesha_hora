@@ -10,6 +10,7 @@ import 'dart:io';
 
 import '../models/grahas.dart';
 import '../models/raasi.dart';
+import '../models/upagrahas.dart';
 import '../models/users.dart';
 
 class DatabaseHelper {
@@ -41,16 +42,18 @@ class DatabaseHelper {
       ${Users.colUserId} INTEGER PRIMARY KEY AUTOINCREMENT,   
       ${Users.colUserName} TEXT NOT NULL,
       ${Users.colUserSex} TEXT NOT NULL,
+      ${Users.colUserLoc} TEXT NOT NULL,
       ${Users.colUserLong} REAL,
       ${Users.colUserLat} REAL,
-      ${Users.colUserBSRise} TEXT NOT NULL,
-      ${Users.colUserBSSet} TEXT NOT NULL,
+      ${Users.colUserSunTimes} TEXT NOT NULL,
+      ${Users.colUserAscTimes} TEXT NOT NULL,
       ${Users.colUserDesc} TEXT NOT NULL,
       ${Users.colUserDateTime} TEXT NOT NULL,
       ${Users.colUserBPos} TEXT NOT NULL,
       ${Users.colUserBSpeed} TEXT NOT NULL, 
       ${Users.colUserTPos} TEXT NOT NULL,
-      ${Users.colUserTSpeed} TEXT NOT NULL
+      ${Users.colUserTSpeed} TEXT NOT NULL,
+      ${Users.colUserStamp} TEXT NOT NULL
     )
     ''');
 
@@ -95,7 +98,6 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-
     CREATE TABLE ${Raasi.tblRaasi}(
       ${Raasi.colRaasiId} INTEGER PRIMARY KEY AUTOINCREMENT,
       ${Raasi.colRaasiName} TEXT NOT NULL,
@@ -107,6 +109,17 @@ class DatabaseHelper {
     )
     ''');
 
+    await db.execute('''
+    CREATE TABLE ${Upagrahas.tblUpa}(
+      ${Upagrahas.colUpaId} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${Upagrahas.colUpaKaala} TEXT NOT NULL,
+      ${Upagrahas.colUpaMrityu} TEXT NOT NULL,
+      ${Upagrahas.colUpaArtha} TEXT NOT NULL,
+      ${Upagrahas.colUpaYama} TEXT NOT NULL,
+      ${Upagrahas.colUpaGulika} TEXT NOT NULL,
+      ${Upagrahas.colUpaMaandi} TEXT NOT NULL
+    )
+    ''');
     Batch batch = db.batch();
     //==============================================================
     String userDataJson =
@@ -143,6 +156,16 @@ class DatabaseHelper {
     for (var val in raasiList) {
       Raasi raasi = Raasi.fromMap(val);
       batch.insert(Raasi.tblRaasi, raasi.toMap());
+    }
+
+    //==============================================================
+    String upaDataJson =
+        await rootBundle.loadString('assets/json/upagraha.json');
+    List upaList = json.decode(upaDataJson);
+
+    for (var val in upaList) {
+      Upagrahas upa = Upagrahas.fromMap(val);
+      batch.insert(Upagrahas.tblUpa, upa.toMap());
     }
 
     batch.commit();
@@ -278,5 +301,16 @@ class DatabaseHelper {
 
     // print('From DB Raasi: $res');
     return res.isEmpty ? [] : res.map((e) => Raasi.fromMap(e)).toList();
+  }
+
+  //=========================Raasi=====================================
+  Future<List<Upagrahas>> getUpaList() async {
+    Database db = await database;
+    var res = await db.rawQuery('''
+     SELECT * FROM ${Upagrahas.tblUpa}
+    ''');
+
+    // print('From DB Upa: $res');
+    return res.isEmpty ? [] : res.map((e) => Upagrahas.fromMap(e)).toList();
   }
 }

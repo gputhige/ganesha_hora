@@ -58,10 +58,10 @@ class _MyAppState extends State<MyApp> {
             ),
           )),
       debugShowCheckedModeBanner: false,
-      home: InputScreen2(
+      /* home: InputScreen2(
         sizes: sizes,
-      ),
-      //home: UserList(sizes: sizes),
+      ), */
+      home: UserList(sizes: sizes),
       //home: SunRiseTest()
     );
   }

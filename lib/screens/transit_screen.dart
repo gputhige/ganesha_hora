@@ -154,9 +154,160 @@ class _TransitScreenState extends State<TransitScreen> {
                     padding: const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                         border: Border.all(width: 2.0), color: Colors.blue),
-                    width: MediaQuery.of(context).size.width * .35,
-                    height: MediaQuery.of(context).size.height * .9,
-                    child: SingleChildScrollView(
+                    width: widget.sizes[0] * .35,
+                    height: widget.sizes[1] * .9,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Select Date for Transit Positions',
+                          style: subHeadingStyle,
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          width: 300,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.white, width: 1.0),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5.0))),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Transit Date',
+                                style: titleStyle,
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                cursorColor: Colors.white,
+                                style: contentStyle,
+                                autovalidateMode: AutovalidateMode.always,
+                                decoration: InputDecoration(
+                                    hintText: DateFormat('dd-MM-yyyy')
+                                        .format(selectedDate),
+                                    hintStyle: hintStyle,
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 0.0),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          width: 1.0),
+                                    ),
+                                    icon: IconButton(
+                                      icon: const Icon(Icons.calendar_month),
+                                      onPressed: () {
+                                        _getDate();
+                                      },
+                                    )),
+                                onChanged: (value) {},
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 300,
+                          height: 90,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.white, width: 1.0),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5.0))),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Transit Date',
+                                style: titleStyle,
+                              ),
+                              TextFormField(
+                                autofocus: false,
+                                cursorColor: Colors.white,
+                                style: contentStyle,
+                                autovalidateMode: AutovalidateMode.always,
+                                decoration: InputDecoration(
+                                    hintText: DateFormat('dd-MM-yyyy')
+                                        .format(selectedDate),
+                                    hintStyle: hintStyle,
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 0.0),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          width: 1.0),
+                                    ),
+                                    icon: IconButton(
+                                      icon: const Icon(Icons.calendar_month),
+                                      onPressed: () {
+                                        _getTime();
+                                      },
+                                    )),
+                                onChanged: (value) {},
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                        /* MyTextInputField(
+                              title: 'Transit Date',
+                              hint:
+                                  DateFormat('dd-MM-yyyy').format(selectedDate),
+                              textStyle: paraBoldStyle,
+                              textInputType: TextInputType.name,
+                              textCapital: TextCapitalization.words,
+                              containerWidth: 300,
+                              widget: IconButton(
+                                icon: const Icon(Icons.calendar_month),
+                                onPressed: () {
+                                  _getDate();
+                                },
+                              )), */
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                            (states) => Colors.red)),
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text('Cancel')),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith(
+                                            (states) => Colors.green)),
+                                onPressed: () {
+                                  getSwephData(
+                                      selectedDate,
+                                      widget.user.birthlat!,
+                                      widget.user.birthlong!);
+                                },
+                                child: const Text('Get Data')),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    /* SingleChildScrollView(
                       child: Column(children: [
                         Text(
                           'Select Date for Transit Positions',
@@ -224,7 +375,7 @@ class _TransitScreenState extends State<TransitScreen> {
                           ],
                         ),
                       ]),
-                    ),
+                    ), */
                   ),
                 ));
               }
@@ -290,7 +441,7 @@ class _TransitScreenState extends State<TransitScreen> {
     }
 
     //Get.to(() => ChartViewTwo(user: singleUser[0]));
-    //Get.to(() => DataScreen(user: singleUser[0]));
-    Get.to(() => SunRiseTest());
+    Get.to(() => DataScreen(user: singleUser[0]));
+    //Get.to(() => SunRiseTest());
   }
 }

@@ -527,8 +527,8 @@ class _InputScreenState extends State<InputScreen> {
           sex: sex,
           birthlong: double.parse(longController.text),
           birthlat: double.parse(lattController.text),
-          birthsunrise: sunR,
-          birthsunset: sunS,
+          suntimes: sunR,
+          asctimes: sunS,
           description: "",
           birthdttm: birthdate.toString(),
           planetpos:

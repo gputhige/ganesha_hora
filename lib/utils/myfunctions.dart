@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 Future<double> listStrToDbl(String inputString, String comma, int index) async {
   double res = double.parse(inputString.split(comma)[index]);
   return res;
@@ -81,16 +83,39 @@ Future<String> decimalToTime(double value) async {
   var res2 = (res / 100 * 60).truncate();
   var sec = (res2 - (((res2 / 100).truncate()) * 100));
   sec = (sec / 100 * 60).truncate();
-  tme = '$hr:$min:$sec';
+  tme =
+      '${hr.toString().padLeft(2, '0')}:${min.toString().padLeft(2, '0')}:${sec.toString().padLeft(2, '0')}';
   return tme;
 }
 
 Future<int> timeToSecs(String tme) async {
-  List<int> times = [];
-  times.add((int.parse(tme.split(':')[0])) * 3600);
-  times.add((int.parse(tme.split(':')[1])) * 60);
-  times.add((int.parse(tme.split(':')[2])));
-  int hrmnse = times[0] + times[1] + times[2];
+  List<int> timeList = [];
+  //print('Time from Func: $tme');
+  timeList.add((int.parse(tme.split(':')[0])) * 3600);
+  timeList.add((int.parse(tme.split(':')[1])) * 60);
+  timeList.add((int.parse(tme.split(':')[2])));
+  int hrmnse = timeList[0] + timeList[1] + timeList[2];
+  //print('Hrmnse from func $hrmnse');
 
   return hrmnse;
+}
+
+Future<double> secsToTime(int secs) async {
+  double time = 0;
+  double hour = (secs / 3600).truncate().toDouble();
+  double min = ((((secs / 3600) - hour) * 60).truncate()).toDouble();
+  double sec = ((((secs / 3600) - hour) * 60) - min).toDouble();
+  time = hour + min + sec;
+  //print('Sec to Time: $time');
+  return time;
+}
+
+Future<String> secToTimeStr(int secs) async {
+  String timeStr = '';
+  int hour = (secs / 3600).truncate();
+  int min = ((((secs / 3600) - hour) * 60).truncate());
+  int sec = (((((secs / 3600) - hour) * 60) - min) * 60).truncate();
+  timeStr =
+      '${hour.toString().padLeft(2, '0')}:${min.toString().padLeft(2, '0')}:${sec.toString().padLeft(2, '0')}';
+  return timeStr;
 }

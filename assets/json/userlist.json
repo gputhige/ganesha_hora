@@ -2,15 +2,17 @@
   {
     "name": "Test Data",
     "sex": "Male",
-    "birthlong": 80.648,
-    "birthlat": 16.5062,
-    "birthsunrise": "6.31 AM",
-    "birthsunset": "6.31 PM",
+    "location": "Vijayawada",
+    "birthlong": 80.6166,
+    "birthlat": 16.5166,
+    "suntimes": "23164, 63009, 23199",
+    "asctimes": "229.60, 50.07, 230.48",
     "description": "Not Used",
     "birthdttm": "1900-01-01 00:00:00.000",
     "planetpos": " ",
     "planetspeed": " ",
     "transitpos": " ",
-    "transitspeed": " "
+    "transitspeed": " ",
+    "timestamp": "1900-01-01 00:00:00.000"
   }
 ]

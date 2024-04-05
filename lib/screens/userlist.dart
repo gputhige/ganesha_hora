@@ -6,7 +6,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:parashara_hora/screens/chartview.dart';
 import 'package:parashara_hora/screens/inputscreen.dart';
-import 'package:parashara_hora/screens/test1.dart';
 import 'package:parashara_hora/screens/transit_screen.dart';
 import 'package:parashara_hora/ui/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +13,7 @@ import 'package:sweph/sweph.dart';
 
 import '../models/users.dart';
 import '../utils/databasehelper.dart';
+import 'input_screen2.dart';
 
 class UserList extends StatefulWidget {
   final List<double> sizes;
@@ -52,7 +52,9 @@ class _UserListState extends State<UserList> {
 
   onTapped(int input) async {
     if (input == 1) {
-      final result = await Get.to(() => const InputScreen());
+      final result = await Get.to(() => InputScreen2(
+            sizes: widget.sizes,
+          ));
       if (result != null) {
         userdblist = await dbHelper.getUserList();
         setState(() {});
@@ -147,6 +149,11 @@ class _UserListState extends State<UserList> {
                                     style: subHeadingStyle,
                                   )),
                                   DataColumn(
+                                      label: Text(
+                                    'Location',
+                                    style: subHeadingStyle,
+                                  )),
+                                  DataColumn(
                                       label: textBlock(
                                           'Latitude', subHeadingStyle)),
                                   DataColumn(
@@ -171,14 +178,17 @@ class _UserListState extends State<UserList> {
                                             titleStyle,
                                           )),
                                           DataCell(textBlock(
+                                              userdblist[i].location!,
+                                              titleStyle)),
+                                          DataCell(textBlock(
                                               userdblist[i]
                                                   .birthlat!
-                                                  .toString(),
+                                                  .toStringAsFixed(4),
                                               titleStyle)),
                                           DataCell(textBlock(
                                               userdblist[i]
                                                   .birthlong!
-                                                  .toString(),
+                                                  .toStringAsFixed(4),
                                               titleStyle)),
                                         ],
                                         onSelectChanged: (value) {

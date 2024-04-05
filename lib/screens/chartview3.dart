@@ -62,7 +62,7 @@ class _ChartViewThreeState extends State<ChartViewThree> {
     divNumber = 'D09';
 
     grahaData = widget.grahaData;
-    ascMovement = grahaData[1]['D01']!['Rin']![0] + 1 ;
+    ascMovement = grahaData[1]['D01']!['Rin']![0] + 1;
 
     if ((grahaData[2][divNumber]!['Deg']![0]) / 30 > 0) {
       divMovement = (grahaData[2][divNumber]!['Deg']![0]) ~/ 30 + 1;

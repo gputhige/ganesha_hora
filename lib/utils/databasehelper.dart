@@ -102,7 +102,8 @@ class DatabaseHelper {
       ${Raasi.colRaasiDeg} INTEGER,
       ${Raasi.colRaasiLord} TEXT NOT NULL,
       ${Raasi.colRaasiShortName} TEXT NOT NULL,
-      ${Raasi.colRaasiOrder} INTEGER
+      ${Raasi.colRaasiOrder} INTEGER,
+      ${Raasi.colRaasiLSName} TEXT NOT NULL
     )
     ''');
 

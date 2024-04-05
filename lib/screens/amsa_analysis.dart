@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:parashara_hora/models/nakshatra.dart';
 import 'package:parashara_hora/models/raasi.dart';
 import 'package:parashara_hora/ui/theme.dart';
@@ -56,6 +55,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
   }
 
   Future<int> _future() async {
+    //print('Amsa Detail: - ${widget.planetPos[0]}');
     dasagraha = await dbHelper.getGraha();
     raasi = await dbHelper.getRaasiList();
     nak = await dbHelper.getNakList();
@@ -113,7 +113,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
         }
       }
       plposint = int.parse(grahaDetails['ras']![i]) - 1;
-      print('Pl pos - asc point $plposint $ascposint ${plposint - ascposint}');
+
       if (plposint - ascposint < 0) {
         plposint = _reduceRasi(((plposint - ascposint) + 12));
       } else {
@@ -403,11 +403,6 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
     return numb;
   }
 
-  double _textStringToDouble() {
-    double value = 0;
-    return value;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -448,7 +443,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
                           height: 20,
                         ),
                         Text(
-                          'Graha Details}',
+                          'Graha Details',
                           style: subTitleStyle,
                         ),
                         const Divider(
@@ -464,7 +459,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  '  GRAHA        (R)     RAASI    GRAHA   OWNER      IN     DNT   BHV ',
+                                  '  GRAHA        (R)     RAASI    BVA   OWNER      IN     DNT   BHV ',
                                   style: paraStyle,
                                 ),
                               ),
@@ -486,7 +481,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
                                     alignedText(
                                         35, '${grahaDetails['rnm']![i]}', 0),
                                     alignedText(
-                                        40, '${grahaDetails['rnm']![i]}', 0),
+                                        35, '${grahaDetails['rnm']![i]}', 0),
                                     alignedText(
                                         58, ' ${grahaDetails['rld']![i]}', 0),
                                     alignedText(

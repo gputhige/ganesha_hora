@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 import '../ui/theme.dart';
 import '../utils/databasehelper.dart';
+import '../utils/myfunctions.dart';
 
 enum Sex { male, female, other }
 
@@ -514,9 +515,12 @@ class _InputScreenState extends State<InputScreen> {
     } */
 
     //Get SunRise SunSet============================
-    var res = await _fetchSunRise();
+    //var res = await _fetchSunRise();
+    var res = await _getSunTimes(lattController.text, longController.text,
+        selectedDate.toString(), tzonevalue);
 
-    //Convert Data to User Model===================
+    //Convert Data to
+    // Model===================
     if (res != 0) {
       Users user = (Users(
           name: nameController.text,
@@ -544,7 +548,7 @@ class _InputScreenState extends State<InputScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
-  Future<int> _fetchSunRise() async {
+  /*  Future<int> _fetchSunRise() async {
     String lat = lattController.text,
         lng = longController.text,
         dte = selectedDate.toString(),
@@ -556,14 +560,115 @@ class _InputScreenState extends State<InputScreen> {
     Map<String, dynamic> sunrise = json.decode(response);
 
     if (sunrise.isNotEmpty) {
-      /* String sunR = sunrise['results']['sunrise'];
-      String sunS = sunrise['results']['suneet']; */
+      
       sunR = (sunrise['results']['sunrise']).toString();
       sunS = (sunrise['results']['sunset']).toString();
     }
+    double hrmnse =
+        await timeToSecs((selectedDate.toString().substring(11, 18)));
+    double sunris = await timeToSecs('0${sunR.substring(0, 8)}');
+    if (hrmnse > sunris) {
+      dte = (selectedDate.subtract(Duration(days: 1))).toString();
+      url = Uri.parse(
+          'https://api.sunrisesunset.io/json?lat=$lat&lng=$lng&timezone=$tzone&date=$dte');
+      var response = await http.read(url);
+    } else {
+      print('Past');
+    }
+
+    print('Birth: $hrmnse $sunris');
+    //Get 3 datapoints of SunRise to SunRise
 
     return 1;
+  } */
+
+  Future<List<int>> _getSunTimes(
+      String lat, String lng, String dte, String tzone) async {
+    List<int> sunTimesInt = [];
+    List<String> sunTimesStr = [];
+    int hrmnse = await timeToSecs((selectedDate.toString().substring(11, 18)));
+    Map<String, dynamic> sunrise = await _sunTimeAPI(lattController.text,
+        longController.text, selectedDate.toString(), tzonevalue);
+
+    if (sunrise.isNotEmpty) {
+      int sunRinSecs = await timeToSecs(
+          '0${((sunrise['results']['sunrise']).toString()).substring(0, 7)}');
+      int sunSetSecs = await timeToSecs(
+              '0${((sunrise['results']['sunset']).toString()).substring(0, 7)}') +
+          (3600 * 12);
+      if (hrmnse > sunRinSecs) {
+        sunTimesInt.add(sunRinSecs);
+        sunTimesInt.add(sunSetSecs);
+        sunTimesStr.add((sunrise['results']['sunrise']).substring(0, 7));
+        sunTimesStr.add((sunrise['results']['sunset'].substring(0, 7)));
+
+        sunrise = await _sunTimeAPI(lattController.text, longController.text,
+            (selectedDate.add(const Duration(days: 1))).toString(), tzonevalue);
+        sunRinSecs = await timeToSecs(
+            '0${((sunrise['results']['sunrise']).toString()).substring(0, 7)}');
+        sunTimesInt.add(sunRinSecs);
+        sunTimesStr.add((sunrise['results']['sunrise'].substring(0, 7)));
+      } else {
+        sunrise = await _sunTimeAPI(
+            lattController.text,
+            longController.text,
+            (selectedDate.subtract(const Duration(days: 1))).toString(),
+            tzonevalue);
+        sunRinSecs = await timeToSecs(
+            '0${((sunrise['results']['sunrise']).toString()).substring(0, 7)}');
+        sunSetSecs = await timeToSecs(
+            '0${((sunrise['results']['sunset']).toString()).substring(0, 7)}');
+        sunTimesInt.add(sunRinSecs);
+        sunTimesInt.add(sunSetSecs);
+      }
+    }
+    print(
+        'Birth / Sun Times: $hrmnse ${sunTimesInt.toList()} ${sunTimesStr.toList()}');
+
+    return sunTimesInt;
   }
+
+  Future<Map<String, dynamic>> _sunTimeAPI(
+      String lat, String lng, String dte, String tzone) async {
+    Map<String, dynamic> suntime;
+    var url = Uri.parse(
+        'https://api.sunrisesunset.io/json?lat=$lat&lng=$lng&timezone=$tzone&date=$dte');
+    var response = await http.read(url);
+    suntime = json.decode(response);
+
+    return suntime;
+  }
+
+  //fetch SunRise to SunRise
+//Get Sunrise datapoints
+  /* double hrmnse =
+        await (timeToSecs(widget.user.birthdttm!.substring(11, 19)));
+    print(hrmnse);
+    print(
+        '${widget.user.birthlong} ${widget.user.birthlat} ${widget.user.birthdttm}');
+    double lng = widget.user.birthlong!;
+    double lat = widget.user.birthlat!;
+    String dte = widget.user.birthdttm!.substring(0, 10);
+    String tzone = "5:30";
+    var url = Uri.parse(
+        'https://api.sunrisesunset.io/json?lat=$lat&lng=$lng&timezone=$tzone&date=$dte');
+    var response = await http.read(url);
+    Map<String, dynamic> sunrise = json.decode(response);
+    if (sunrise.isNotEmpty) {
+      /* String sunR = sunrise['results']['sunrise'];
+      String sunS = sunrise['results']['suneet']; */
+      double sunR = await timeToSecs(
+          '0${((sunrise['results']['sunrise']).toString()).substring(0, 8)}');
+      double sunS = await timeToSecs(
+          '0${((sunrise['results']['sunset']).toString()).substring(0, 8)}');
+      sunS = sunS + (3600 * 12);
+      if (sunR > hrmnse) {
+        print('Previous');
+      } else {
+        print('Next');
+      }
+      print('Sunrise $sunR $sunS');
+    } */
 
   //Convert Text to UpperCase
   String capitalizeAllWord(String value) {

@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:parashara_hora/screens/chartview2.dart';
+import 'package:parashara_hora/screens/data_screen.dart';
+import 'package:parashara_hora/screens/sunrisetest.dart';
+import 'package:parashara_hora/utils/myfunctions.dart';
 import 'package:sweph/sweph.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/users.dart';
 import '../ui/text_input_widget.dart';
@@ -272,7 +277,8 @@ class _TransitScreenState extends State<TransitScreen> {
         counter = degree;
       }
     }
-    //Ketu Calculation==============================
+    //Ketu Calculation=========================
+    //=====
     transitPos.add("${counter + 180}");
 
     var res = await dbHelper.updateUser(
@@ -283,6 +289,8 @@ class _TransitScreenState extends State<TransitScreen> {
       singleUser = await dbHelper.getUser(widget.user.id!);
     }
 
-    Get.to(() => ChartViewTwo(user: singleUser[0]));
+    //Get.to(() => ChartViewTwo(user: singleUser[0]));
+    //Get.to(() => DataScreen(user: singleUser[0]));
+    Get.to(() => SunRiseTest());
   }
 }

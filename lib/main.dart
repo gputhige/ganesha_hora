@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:parashara_hora/screens/inputscreen.dart';
+import 'package:parashara_hora/screens/input_screen2.dart';
+import 'package:parashara_hora/screens/sunrisetest.dart';
 import 'package:parashara_hora/screens/userlist.dart';
 
 void main() async {
@@ -28,7 +29,6 @@ class _MyAppState extends State<MyApp> {
     sizes.add(MediaQuery.of(context).size.width);
     sizes.add(MediaQuery.of(context).size.height);
     sizes.add(MediaQuery.of(context).viewPadding.top);
-    print('Sizes: ${sizes[0]} ${sizes[1]} ${sizes[2]}');
     return GetMaterialApp(
       title: 'Parashara Hora',
       theme: ThemeData(
@@ -58,8 +58,11 @@ class _MyAppState extends State<MyApp> {
             ),
           )),
       debugShowCheckedModeBanner: false,
-      // home: InputScreen(),
-      home: UserList(sizes: sizes),
+      home: InputScreen2(
+        sizes: sizes,
+      ),
+      //home: UserList(sizes: sizes),
+      //home: SunRiseTest()
     );
   }
 }

@@ -4,83 +4,95 @@
     "degend": 30,
     "lord": "Kuja",
     "shortname": "Ar",
-    "rasiorder": 4
+    "rasiorder": 4,
+    "lshortname": "Kj"
   },
   {
     "name": "Vrishabha",
     "degend": 60,
     "lord": "Shukra",
     "shortname": "Ta",
-    "rasiorder": 3
+    "rasiorder": 3,
+    "lshortname": "Sk"
   },
   {
     "name": "Mithuna",
     "degend": 90,
     "lord": "Budha",
     "shortname": "Ge",
-    "rasiorder": 2
+    "rasiorder": 2,
+    "lshortname": "Bh"
   },
   {
     "name": "Karkataka",
     "degend": 120,
     "lord": "Chandra",
     "shortname": "Ca",
-    "rasiorder": 1
+    "rasiorder": 1,
+    "lshortname": "Ch"
   },
   {
     "name": "Simha",
     "degend": 150,
     "lord": "Ravi",
     "shortname": "Le",
-    "rasiorder": 0
+    "rasiorder": 0,
+    "lshortname": "Ra"
   },
   {
     "name": "Kanya",
     "degend": 180,
     "lord": "Budha",
     "shortname": "Vi",
-    "rasiorder": 2
+    "rasiorder": 2,
+    "lshortname": "Bh"
   },
   {
     "name": "Tula",
     "degend": 210,
     "lord": "Shukra",
     "shortname": "Li",
-    "rasiorder": 3
+    "rasiorder": 3,
+    "lshortname": "Sk"
   },
   {
     "name": "Vrischika",
     "degend": 240,
     "lord": "Kuja",
     "shortname": "Sc",
-    "rasiorder": 4
+    "rasiorder": 4,
+    "lshortname": "Kj"
   },
   {
     "name": "Dhanu",
     "degend": 270,
     "lord": "Guru",
     "shortname": "Sg",
-    "rasiorder": 5
+    "rasiorder": 5,
+    "lshortname": "Gu"
   },
   {
     "name": "Makara",
     "degend": 300,
     "lord": "Shani",
     "shortname": "Cp",
-    "rasiorder": 6
+    "rasiorder": 6,
+    "lshortname": "Sh"
   },
   {
     "name": "Khumbha",
     "degend": 330,
     "lord": "Shani",
     "shortname": "Aq",
-    "rasiorder": 6
+    "rasiorder": 6,
+    "lshortname": "Gu"
   },
   {
     "name": "Meena",
     "degend": 360,
     "lord": "Guru",
     "shortname": "Pi",
-    "rasiorder": 5
+    "rasiorder": 5,
+    "lshortname": "Sh"
   }
 ]

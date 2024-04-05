@@ -6,6 +6,7 @@ class Raasi {
   static const colRaasiLord = 'lord';
   static const colRaasiShortName = 'shortname';
   static const colRaasiOrder = 'rasiorder';
+  static const colRaasiLSName = 'lshortname';
 
   Raasi(
       {this.id,
@@ -13,7 +14,8 @@ class Raasi {
       this.degend,
       this.lord,
       this.shortname,
-      this.rasiorder});
+      this.rasiorder,
+      this.lshortname});
 
   int? id;
   String? name;
@@ -21,6 +23,7 @@ class Raasi {
   String? lord;
   String? shortname;
   int? rasiorder;
+  String? lshortname;
 
   Raasi.fromMap(Map<String, dynamic> map) {
     id = map[colRaasiId];
@@ -29,6 +32,7 @@ class Raasi {
     lord = map[colRaasiLord];
     shortname = map[colRaasiShortName];
     rasiorder = map[colRaasiOrder];
+    lshortname = map[colRaasiLSName];
   }
 
   Map<String, dynamic> toMap() {
@@ -37,7 +41,8 @@ class Raasi {
       colRaasiDeg: degend,
       colRaasiLord: lord,
       colRaasiShortName: shortname,
-      colRaasiOrder: rasiorder
+      colRaasiOrder: rasiorder,
+      colRaasiLSName: lshortname
     };
     if (id != null) {
       map[colRaasiId] = id;

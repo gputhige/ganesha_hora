@@ -654,7 +654,6 @@ class _InputScreen2State extends State<InputScreen2> {
 
   Future<int> _validate() async {
     var inpt = await _entryCheck();
-
     if (inpt == false) {
       setState(() {
         allOkay = false;
@@ -666,7 +665,6 @@ class _InputScreen2State extends State<InputScreen2> {
       if (dte == true) {
         var cord = await _cordCheck();
         if (cord == true) {
-          print('All Okay');
           showDialog(
               context: context,
               builder: (BuildContext context) => _buildPopUpDialogue(context));
@@ -697,7 +695,6 @@ class _InputScreen2State extends State<InputScreen2> {
         return false;
       }
     }
-
     setState(() {});
     return true;
   }
@@ -725,9 +722,6 @@ class _InputScreen2State extends State<InputScreen2> {
         hours: int.parse(textController[4].text),
         minutes: int.parse(textController[5].text),
         seconds: int.parse(textController[6].text)));
-
-    print('Formatted Date Time: $formDate');
-
     if (formDate!.isAfter(DateTime.now())) {
       allOkay = false;
       _showSnackBar(errmsg[1]);
@@ -760,8 +754,6 @@ class _InputScreen2State extends State<InputScreen2> {
 
       var lat = int.parse(textController[9].text) + nmin / 60;
       var lng = int.parse(textController[11].text) + emin / 60;
-      print('$lat $lng');
-
       if (dropString[3] == 'South') {
         lat = lat * -1;
       }

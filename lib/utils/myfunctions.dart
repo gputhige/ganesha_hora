@@ -1,12 +1,21 @@
+import 'dart:math';
+
 import 'package:intl/intl.dart';
+import 'package:sweph/sweph.dart';
 
 Future<double> listStrToDbl(String inputString, String comma, int index) async {
   double res = double.parse(inputString.split(comma)[index]);
   return res;
 }
 
-updateMap(Map<String, List<dynamic>> map, String row, String newvalue) {
+/* updateMap(Map<String, List<dynamic>> map, String row, String newvalue) {
   map.update(row, (list) => list..add(newvalue), ifAbsent: () => [newvalue]);
+}
+ */
+Future<double> truncateDouble(double val, int places) async {
+  double truncated =
+      (val * (pow(10, places))).truncateToDouble() / (pow(10, places));
+  return truncated;
 }
 
 updateDblMap(
@@ -118,4 +127,25 @@ Future<String> secToTimeStr(int secs) async {
   timeStr =
       '${hour.toString().padLeft(2, '0')}:${min.toString().padLeft(2, '0')}:${sec.toString().padLeft(2, '0')}';
   return timeStr;
+}
+
+Future<HouseCuspData> getAscendant(DateTime birthdate, int day, int time,
+    double tmeZone, double latitude, double longitude) async {
+  final date = birthdate.day + day;
+  double hour = (time / 3600) + tmeZone;
+
+  final julday = Sweph.swe_julday(
+      birthdate.year, birthdate.month, date, hour, CalendarType.SE_GREG_CAL);
+
+  return Sweph.swe_houses_ex2(
+      julday, SwephFlag.SEFLG_SIDEREAL, latitude, longitude, Hsys.P);
+}
+
+Future<int> loopAt(int value, int end, int start) async {
+  int loopval = 0;
+  if (value == end) {
+    loopval = start;
+  }
+
+  return loopval;
 }

@@ -22,13 +22,25 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   List<double> sizes = [];
+  double wdt = 0, hgt = 0;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    sizes.add(MediaQuery.of(context).size.width);
+    wdt = MediaQuery.of(context).size.width;
+    hgt = MediaQuery.of(context).size.height;
+    if (wdt > hgt) {
+      sizes.add(MediaQuery.of(context).size.width);
+      sizes.add(MediaQuery.of(context).size.height);
+      sizes.add(MediaQuery.of(context).viewPadding.top);
+    } else {
+      sizes.add(MediaQuery.of(context).size.height);
+      sizes.add(MediaQuery.of(context).size.width);
+      sizes.add(MediaQuery.of(context).viewPadding.top);
+    }
+    /*  sizes.add(MediaQuery.of(context).size.width);
     sizes.add(MediaQuery.of(context).size.height);
-    sizes.add(MediaQuery.of(context).viewPadding.top);
+    sizes.add(MediaQuery.of(context).viewPadding.top); */
     return GetMaterialApp(
       title: 'Parashara Hora',
       theme: ThemeData(

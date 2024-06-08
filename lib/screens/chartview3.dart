@@ -383,16 +383,34 @@ class _ChartViewThreeState extends State<ChartViewThree> {
                         ),
                         //Second Block Area ==================================
                         SizedBox(
-                          width: screenwd * .4,
-                          height: screenwd * .55,
-                          child: BasicsScreen2(
-                              user: widget.user, grahadata: grahaData),
-                          /*  child: BasicsScreen(
+                            width: screenwd * .4,
+                            height: screenwd * .55,
+                            child: secondblock == 0
+                                ? BasicsScreen2(
+                                    user: widget.user, grahadata: grahaData)
+                                : secondblock == 1
+                                    ? DasaScreen2(
+                                        moondegree: grahaData[1]
+                                            ['D01']!['Deg']![2],
+                                        user: widget.user)
+                                    : secondblock == 2
+                                        ? GrahaAnalysis(
+                                            planetPos: grahaData[1]
+                                                ['D01']!['Deg']!,
+                                            planetSpeed: grahaData[1]
+                                                ['D01']!['Spd']!)
+                                        : AmsaAnalysis(
+                                            planetPos: grahaData[2]
+                                                ['D09']!['Deg']!,
+                                            planetSpeed: grahaData[1]
+                                                ['D01']!['Deg']!,
+                                            amsaNumber: divNumber)
+                            /*  child: BasicsScreen(
                             user: widget.user,
                             grahadata: grahaData,
                           ), */
-                          //  child: BasicsScreen(user: UserData, planetPrg: [],)
-                          /* secondblock == 3
+                            //  child: BasicsScreen(user: UserData, planetPrg: [],)
+                            /* secondblock == 3
                               ? AmsaAnalysis(
                                   planetPos: divPos,
                                   planetSpeed: _planetSpeed,
@@ -400,6 +418,7 @@ class _ChartViewThreeState extends State<ChartViewThree> {
                                 )
                               : secondblock == 1
                                   ? DasaScreen2(
+                                    
                                       moondegree: _planetPos[2],
                                       user: widget.user,
                                     )
@@ -412,7 +431,7 @@ class _ChartViewThreeState extends State<ChartViewThree> {
                                           planetPos: _planetPos,
                                           planetSpeed: _planetSpeed,
                                         ), */
-                        ),
+                            ),
                       ],
                     ),
                   ),

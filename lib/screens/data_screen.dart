@@ -385,6 +385,7 @@ class _DataScreenState extends State<DataScreen> {
         "Deg": [...divTemp]
       }
     });
+    print('D09 Pos: ${grahaData[2]['D09']!['Deg']!.toList()}');
 
     divTemp.clear();
 

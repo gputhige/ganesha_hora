@@ -96,7 +96,7 @@ TextStyle get paraStyle {
   ));
 }
 
-TextStyle get paraStylRed {
+TextStyle get paraStyleRed {
   return GoogleFonts.lato(
       textStyle: const TextStyle(
     fontSize: 12,

@@ -8,8 +8,8 @@ import 'package:parashara_hora/utils/databasehelper.dart';
 import '../models/grahas.dart';
 
 class GrahaAnalysis extends StatefulWidget {
-  final List<double> planetPos;
-  final List<double> planetSpeed;
+  final List<dynamic> planetPos;
+  final List<dynamic> planetSpeed;
   const GrahaAnalysis(
       {Key? key, required this.planetPos, required this.planetSpeed})
       : super(key: key);
@@ -56,8 +56,9 @@ class _GrahaAnalysisState extends State<GrahaAnalysis> {
     raasi = await dbHelper.getRaasiList();
     nak = await dbHelper.getNakList();
 
-    planetPos.addAll(widget.planetPos);
-    planetSpeed.addAll(widget.planetSpeed);
+    planetPos.addAll(widget.planetPos as Iterable<double>);
+    planetSpeed.addAll(widget.planetSpeed as Iterable<double>);
+    print('Graha Details');
     var res1 = await _getGrahaDetails();
     if (res1 == 1) {
       var res2 = await _getGrahaDignity();
@@ -678,6 +679,10 @@ class _GrahaAnalysisState extends State<GrahaAnalysis> {
                         const Divider(
                           thickness: 5,
                         ),
+                        alignedText(
+                            300,
+                            'RLT: Relation / GD: Graha Drishti / RD: Rasi Drishti',
+                            0),
                       ],
                     )),
                   );
@@ -695,7 +700,7 @@ class _GrahaAnalysisState extends State<GrahaAnalysis> {
       width: wdt,
       child: Text(
         textin,
-        style: clr == 0 ? paraStyle : paraStylRed,
+        style: clr == 0 ? paraStyle : paraStyleRed,
       ),
     );
   }

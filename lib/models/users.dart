@@ -14,6 +14,7 @@ class Users {
   static const colUserBSpeed = 'planetspeed';
   static const colUserTPos = 'transitpos';
   static const colUserTSpeed = 'transitspeed';
+  static const colUserUPos = 'upapos';
   static const colUserStamp = 'timestamp';
 
   Users(
@@ -31,6 +32,7 @@ class Users {
       this.planetspeed,
       this.transitpos,
       this.transitspeed,
+      this.upapos,
       this.timestamp});
 
   int? id;
@@ -47,6 +49,7 @@ class Users {
   String? planetspeed;
   String? transitpos;
   String? transitspeed;
+  String? upapos;
   String? timestamp;
 
   Users.fromMap(Map<String, dynamic> map) {
@@ -64,6 +67,7 @@ class Users {
     planetspeed = map[colUserBSpeed];
     transitpos = map[colUserTPos];
     transitspeed = map[colUserTSpeed];
+    upapos = map[colUserUPos];
     timestamp = map[colUserStamp];
   }
 
@@ -82,6 +86,7 @@ class Users {
       colUserBSpeed: planetspeed,
       colUserTPos: transitpos,
       colUserTSpeed: transitspeed,
+      colUserUPos: upapos,
       colUserStamp: timestamp
     };
     if (id != null) {

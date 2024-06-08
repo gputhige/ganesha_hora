@@ -52,6 +52,7 @@ class _UserListState extends State<UserList> {
 
   onTapped(int input) async {
     if (input == 1) {
+      //Add User
       final result = await Get.to(() => InputScreen2(
             sizes: widget.sizes,
           ));
@@ -61,10 +62,12 @@ class _UserListState extends State<UserList> {
       }
     }
     if (input == 2) {
+      //Edit User
       /*  final result = await Get.to(() => const Test(
             selection: 2,
           )); */
     } else if (input == 3) {
+      //Delete User
       if (selectedIndex == 0) {
         selected = false;
         selectedIndex = -1;
@@ -80,6 +83,7 @@ class _UserListState extends State<UserList> {
         }
       }
     } else if (input == 4) {
+      //View Chart
       selected = false;
       userId = selectedIndex;
       selectedIndex = -1;
@@ -135,7 +139,7 @@ class _UserListState extends State<UserList> {
                                 height: 20,
                               ),
                               DataTable(
-                                columnSpacing: 90,
+                                columnSpacing: 30,
                                 columns: [
                                   DataColumn(
                                       label:
@@ -159,6 +163,9 @@ class _UserListState extends State<UserList> {
                                   DataColumn(
                                       label: textBlock(
                                           'Longitude', subHeadingStyle)),
+                                  DataColumn(
+                                      label: textBlock(
+                                          'Time Zone', subHeadingStyle)),
                                 ],
                                 rows: [
                                   for (int i = 0; i < userdblist.length; i++)
@@ -168,7 +175,7 @@ class _UserListState extends State<UserList> {
                                           DataCell(textBlock(
                                               userdblist[i].name!, titleStyle)),
                                           DataCell(textBlock(
-                                              DateFormat('dd-MM-yyyy hh:mm:ss')
+                                              DateFormat('dd-MM-yyyy HH:mm:ss')
                                                   .format(DateTime.parse(
                                                       userdblist[i]
                                                           .birthdttm!)),
@@ -183,6 +190,11 @@ class _UserListState extends State<UserList> {
                                           DataCell(textBlock(
                                               userdblist[i]
                                                   .birthlat!
+                                                  .toStringAsFixed(4),
+                                              titleStyle)),
+                                          DataCell(textBlock(
+                                              userdblist[i]
+                                                  .birthlong!
                                                   .toStringAsFixed(4),
                                               titleStyle)),
                                           DataCell(textBlock(

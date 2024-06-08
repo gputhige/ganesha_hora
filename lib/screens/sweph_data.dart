@@ -59,6 +59,8 @@ class _SwephDataState extends State<SwephData> {
   double tmeZone = 0;
   List<int> sunTimes = [];
   List<double> ascTimes = [];
+  String upaPosStr = '';
+  List<double> upaPos = [];
 
   @override
   void initState() {
@@ -246,6 +248,7 @@ class _SwephDataState extends State<SwephData> {
                 planetSpd.toString().replaceAll('[', '').replaceAll(']', ''),
             transitpos: "",
             transitspeed: "",
+            upapos: upaPos.toString().replaceAll('[', '').replaceAll(']', ''),
             timestamp: DateTime.now().toString()));
 
         var res = await dbHelper.insertUsers(user);
@@ -254,25 +257,21 @@ class _SwephDataState extends State<SwephData> {
         }
       }
     }
-    //save Prefs data
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
   Future<int> _getSunTimes() async {
-    //Get SunRise Data
+    //Get Previous, Current and Next SunRise & SunSet Data===============
     dynamic prevSunRise =
         await _getSwephSunTimes(-1, 0, CalendarType.SE_GREG_CAL, true);
-    //Get SunSet Data
     dynamic prevSunSet =
         await _getSwephSunTimes(-1, 0, CalendarType.SE_GREG_CAL, false);
-    //Get SunRise Data
     dynamic currSunRise =
         await _getSwephSunTimes(0, 0, CalendarType.SE_GREG_CAL, true);
     dynamic currSunSet =
         await _getSwephSunTimes(0, 0, CalendarType.SE_GREG_CAL, false);
     dynamic nextSunRise =
         await _getSwephSunTimes(1, 0, CalendarType.SE_GREG_CAL, true);
-
+    //Get SunRise Time in Seconds from Sweph============================
     int prevSR =
         await timeToSecs(prevSunRise['cd'].toString().substring(11, 19));
     int prevSS =
@@ -294,22 +293,21 @@ class _SwephDataState extends State<SwephData> {
       if (prevSR < 0) {
         prevSR = prevSR + 86400;
       }
-      HouseCuspData asc1 = await getAscendant(0, prevSR);
+      HouseCuspData asc1 = await _getAscendant(0, prevSR);
       prevSS = prevSS + finalZone;
       if (prevSS < 0) {
         prevSS = prevSS + 86400;
       }
-      HouseCuspData asc2 = await getAscendant(0, prevSS);
+      HouseCuspData asc2 = await _getAscendant(0, prevSS);
       currSR = currSR + finalZone;
       if (currSR < 0) {
         currSR = currSR + 86400;
       }
-      HouseCuspData asc3 = await getAscendant(0, currSR);
+      HouseCuspData asc3 = await _getAscendant(0, currSR);
       sunTimes.add(0);
       sunTimes.add(prevSR);
       sunTimes.add(prevSS);
       sunTimes.add(currSR);
-      print(sunTimes.toList());
 
       ascTimes.add(0);
       ascTimes.add(asc1.cusps[1]);
@@ -320,17 +318,17 @@ class _SwephDataState extends State<SwephData> {
       if (currSR < 0) {
         currSR = currSR + 86400;
       }
-      HouseCuspData asc1 = await getAscendant(0, currSR);
+      HouseCuspData asc1 = await _getAscendant(0, currSR);
       currSS = currSS + finalZone;
       if (currSS < 0) {
         currSS = currSS + 86400;
       }
-      HouseCuspData asc2 = await getAscendant(0, currSS);
+      HouseCuspData asc2 = await _getAscendant(0, currSS);
       nextSR = nextSR + finalZone;
       if (nextSR < 0) {
         nextSR = nextSR + 86400;
       }
-      HouseCuspData asc3 = await getAscendant(1, currSR);
+      HouseCuspData asc3 = await _getAscendant(1, currSR);
       if (finalbirth > (currSS)) {
         sunTimes.add(2);
         ascTimes.add(2);
@@ -347,9 +345,24 @@ class _SwephDataState extends State<SwephData> {
       ascTimes.add(asc3.cusps[1]);
     }
 
+    List<double> upaPos = [];
+    if (sunTimes[0] == 0) {
+      double dayBlock = (sunTimes[3] - sunTimes[2] + 86400) / 8;
+      upaPos = await _getUpaPos(dayBlock, 2, sunTimes[2], -1);
+    } else if (sunTimes[0] == 1) {
+      double dayBlock = (sunTimes[2] - sunTimes[1]) / 8;
+      upaPos = await _getUpaPos(dayBlock, 1, sunTimes[1], 0);
+    } else {
+      double dayBlock = (sunTimes[3] - sunTimes[2] + 86400) / 8;
+      upaPos = await _getUpaPos(dayBlock, 2, sunTimes[2], 0);
+    }
+
+    upaPosStr = upaPos.toString();
+
     return 1;
   }
 
+//Get SunTimes from Sweph =====================================
   Future<dynamic> _getSwephSunTimes(
       int dayChange, double hour, CalendarType seType, bool riseSet) async {
     dynamic sunRiseSet = '';
@@ -399,14 +412,50 @@ class _SwephDataState extends State<SwephData> {
     return sunRiseSet;
   }
 
-  Future<HouseCuspData> getAscendant(int day, int time) async {
+//Get Ascendants ==============================================
+  Future<HouseCuspData> _getAscendant(int day, int time) async {
     final date = birthdate!.day + day;
     double hour = (time / 3600) + tmeZone;
-
     final julday = Sweph.swe_julday(birthdate!.year, birthdate!.month, date,
         hour, CalendarType.SE_GREG_CAL);
 
     return Sweph.swe_houses_ex2(
         julday, SwephFlag.SEFLG_SIDEREAL, latitude, longitude, Hsys.P);
+  }
+
+//Get Upa Graha Position ======================================
+  Future<List<double>> _getUpaPos(
+      double dayBlock, int daynight, int suntimes, int vedicday) async {
+    var upaList = await dbHelper.getUpaList();
+
+    int weekday = birthdate!.weekday - 1 + vedicday;
+    if (weekday < 0) {
+      weekday = weekday + 7;
+    }
+    List<int> upaIndex = [];
+    if (daynight != 1) {
+      weekday = weekday + 7;
+    }
+
+    upaIndex.add(int.parse(upaList[0].kaala!.split(',')[weekday]));
+    upaIndex.add(int.parse(upaList[0].mrityu!.split(',')[weekday]));
+    upaIndex.add(int.parse(upaList[0].artha!.split(',')[weekday]));
+    upaIndex.add(int.parse(upaList[0].yama!.split(',')[weekday]));
+    upaIndex.add(int.parse(upaList[0].gulika!.split(',')[weekday]));
+    upaIndex.add(int.parse(upaList[0].maandi!.split(',')[weekday]));
+
+    for (int i = 0; i < upaIndex.length; i++) {
+      if (i == 4) {
+        int upaTimes = ((dayBlock * (upaIndex[i])) + suntimes).truncate();
+        HouseCuspData pos = await _getAscendant(vedicday, upaTimes);
+        upaPos.add(await truncateDouble(pos.cusps[1], 4));
+      } else {
+        int upaTimes = ((dayBlock * (upaIndex[i] + .5)) + suntimes).truncate();
+        HouseCuspData pos = await _getAscendant(vedicday, upaTimes);
+        upaPos.add(await truncateDouble(pos.cusps[1], 4));
+      }
+    }
+
+    return upaPos;
   }
 }

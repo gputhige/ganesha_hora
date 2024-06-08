@@ -7,8 +7,8 @@ import 'package:parashara_hora/utils/databasehelper.dart';
 import '../models/grahas.dart';
 
 class AmsaAnalysis extends StatefulWidget {
-  final List<double> planetPos;
-  final List<double> planetSpeed;
+  final List<dynamic> planetPos;
+  final List<dynamic> planetSpeed;
   final String amsaNumber;
   const AmsaAnalysis(
       {Key? key,
@@ -27,7 +27,8 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
   List<Grahas> dasagraha = [];
   List<Raasi> raasi = [];
   List<Nakshatra> nak = [];
-  List<double> planetPos = [], planetSpeed = [];
+  List<dynamic> planetPos = [];
+  List<dynamic> planetSpeed = [];
   double asc = 0;
   Map<String, List<dynamic>> grahaDetails = {};
   Map<String, List<dynamic>> bhavaDetails = {};
@@ -55,13 +56,13 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
   }
 
   Future<int> _future() async {
-    //print('Amsa Detail: - ${widget.planetPos[0]}');
     dasagraha = await dbHelper.getGraha();
     raasi = await dbHelper.getRaasiList();
     nak = await dbHelper.getNakList();
 
     planetPos.addAll(widget.planetPos);
     planetSpeed.addAll(widget.planetSpeed);
+
     var res1 = await _getGrahaDetails();
     if (res1 == 1) {
       var res2 = await _getGrahaDignity();
@@ -72,7 +73,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
         }
       }
     }
-
+    print('Planet Speed: ${planetSpeed.toList()}');
     return 0;
   }
 
@@ -694,7 +695,7 @@ class _AmsaAnalysisState extends State<AmsaAnalysis> {
       width: wdt,
       child: Text(
         textin,
-        style: clr == 0 ? paraStyle : paraStylRed,
+        style: clr == 0 ? paraStyle : paraStyleRed,
       ),
     );
   }

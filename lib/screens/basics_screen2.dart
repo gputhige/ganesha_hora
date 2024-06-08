@@ -72,6 +72,8 @@ class _BasicsScreen2State extends State<BasicsScreen2>
   ];
   List<String> sunTimes = [];
   String dayOfWeek = '';
+  int wkday = 0;
+  List<Upagrahas> upalist = [];
 
   @override
   void initState() {
@@ -86,27 +88,22 @@ class _BasicsScreen2State extends State<BasicsScreen2>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     screenht = prefs.get('Height') as double;
     screenwd = prefs.get('Width') as double;
-
-    print('Birth Date: ${widget.user.birthdttm}');
+    // upalist = await dbHelper.getUpaList();
     raasi = await dbHelper.getRaasiList();
     if (raasi.isNotEmpty) {
       for (int i = 0; i < raasi.length; i++) {}
     }
-    print('Step 2:');
     var res = await _getAmsaRuler();
     if (res == 0) {
-      print('Step 3:');
-      var res1 = await _getUpagrahas();
+      var res1 = await _getOtherDetails();
       if (res1 == 0) {
-        print('Step 4:');
         return 0;
       }
     }
-
-    // var amsa = await _getAmsaRuler();
     return 0;
   }
 
+//Get Amsa Ruler details
   Future<int> _getAmsaRuler() async {
     double prg = 0;
 
@@ -141,25 +138,8 @@ class _BasicsScreen2State extends State<BasicsScreen2>
     return 0;
   }
 
-  Future<int> _getUpagrahas() async {
-    print('Birth Date Time: ${widget.user.birthdttm}');
-    upas = await dbHelper.getUpaList();
-    if ((widget.user.suntimes!.split(',')[1]) == '0') {
-      print(DateTime.parse(widget.user.birthdttm!)
-          .subtract(const Duration(days: 1))
-          .weekday);
-    } else if (widget.user.suntimes!.split(',')[1] == '1') {
-      print((DateTime.parse(widget.user.birthdttm!)).weekday);
-    } else {
-      print((DateTime.parse(widget.user.birthdttm!)).weekday);
-    }
-
-    int birthtime =
-        await timeToSecs((widget.user.birthdttm!.substring(11, 19)));
-    print('Birth Time: $birthtime');
-    print(widget.user.suntimes);
-    print('Asc: ${widget.user.asctimes}');
-    print(int.parse(widget.user.suntimes!.split(',')[1]));
+//Convert Upagraha details to hr:mn:ss
+  Future<int> _getOtherDetails() async {
     sunTimes.add(
         await secToTimeStr(int.parse(widget.user.suntimes!.split(',')[1])));
     sunTimes.add(
@@ -167,11 +147,29 @@ class _BasicsScreen2State extends State<BasicsScreen2>
     sunTimes.add(
         await secToTimeStr(int.parse(widget.user.suntimes!.split(',')[3])));
 
-    /*  int sunrse = await timeToSecs(widget.user.birthsunrise!.split(' ')[0]);
-    int sunset = await timeToSecs(widget.user.birthsunset!.split(' ')[0]); */
-    /*  int sunrse = int.parse(widget.user.suntimes!);
-    int sunset = int.parse(widget.user.suntimes!); */
-    print('SunRise SunSet: ${sunTimes[0]} ${sunTimes[1]} ${sunTimes[2]}');
+    List<String> upa = [];
+
+    for (int i = 0; i < 6; i++) {
+      double upaPos = (double.parse(widget.user.upapos!.split(',')[i]));
+      int minsec = ((upaPos - upaPos.truncate()) * 3600).round();
+      String rsi = raasi[((upaPos ~/ 30)).ceil()].shortname!;
+      String minSecs = await secToTimeStr(minsec);
+
+      upa.add(
+          '${(upaPos.remainder(30)).truncate()} $rsi ${minSecs.substring(3, 8)}');
+    }
+
+    //Day of Week
+    if (widget.user.suntimes![0] == '0') {
+      dayOfWeek = DateFormat('EEEE').format(
+          DateTime.parse(widget.user.birthdttm!)
+              .subtract(const Duration(days: 1)));
+    } else {
+      dayOfWeek =
+          DateFormat('EEEE').format(DateTime.parse(widget.user.birthdttm!));
+    }
+
+    print(widget.user.suntimes);
 
     return 0;
   }
@@ -212,7 +210,7 @@ class _BasicsScreen2State extends State<BasicsScreen2>
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              textBlock('Basic Details', 1),
+                              textBlock('Basic Details', 2),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -224,33 +222,34 @@ class _BasicsScreen2State extends State<BasicsScreen2>
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      textBlock('Name:', 1),
-                                      textBlock('Date of Birth:', 1),
-                                      textBlock('Time of Birth:', 1),
-                                      textBlock('Time Zone:', 1),
-                                      textBlock('City:', 1),
-                                      textBlock('Long/Lat:', 1),
-                                      textBlock('Lunar Year/Month:', 1),
-                                      textBlock('Thithi:', 1),
-                                      textBlock('Vedic Weekday:', 1),
-                                      textBlock('Nakshatra:', 1),
-                                      textBlock('Yoga:', 1),
-                                      textBlock('Karana:', 1),
-                                      textBlock('Hora Lord:', 1),
-                                      textBlock('Kaala Lord:', 1),
-                                      textBlock('Gauri Panchami:', 1),
-                                      textBlock('Sunrise:', 1),
-                                      textBlock('Sunset:', 1),
-                                      textBlock('Janma Ghatis:', 1),
-                                      textBlock('Ayanamsa:', 1),
-                                      textBlock('Sid Time:', 1),
-                                      textBlock('Karaka Tithi:', 1),
-                                      textBlock('Karaka Yoga:', 1),
+                                      textBlock('Name:', 0),
+                                      textBlock('Date of Birth:', 0),
+                                      textBlock('Time of Birth:', 0),
+                                      textBlock('Time Zone:', 0),
+                                      textBlock('City:', 0),
+                                      textBlock('Long/Lat:', 0),
+                                      textBlock('Lunar Year/Month:', 0),
+                                      textBlock('Thithi:', 0),
+                                      textBlock('Vedic Weekday:', 0),
+                                      textBlock('Nakshatra:', 0),
+                                      textBlock('Yoga:', 0),
+                                      textBlock('Karana:', 0),
+                                      textBlock('Hora Lord:', 0),
+                                      textBlock('Kaala Lord:', 0),
+                                      textBlock('Gauri Panchami:', 0),
+                                      textBlock('Sunrise:', 0),
+                                      textBlock('Sunset:', 0),
+                                      textBlock('Janma Ghatis:', 0),
+                                      textBlock('Ayanamsa:', 0),
+                                      textBlock('Sid Time:', 0),
+                                      textBlock('Karaka Tithi:', 0),
+                                      textBlock('Karaka Yoga:', 0),
                                     ],
                                   ),
                                   const SizedBox(
@@ -261,43 +260,51 @@ class _BasicsScreen2State extends State<BasicsScreen2>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      textBlock(widget.user.name!, 1),
+                                      textBlock(widget.user.name!, 0),
                                       textBlock(
                                           widget.user.birthdttm!.characters
                                               .take(10)
                                               .toString(),
-                                          1),
+                                          0),
                                       textBlock(
-                                          widget.user.birthdttm!
-                                              .substring(11, 16),
-                                          1),
-                                      textBlock('IST', 1),
-                                      textBlock('NA', 1),
+                                          '${widget.user.birthdttm!.substring(11, 16)} Hrs',
+                                          0),
+                                      textBlock('IST', 0),
+                                      textBlock('NA', 0),
                                       textBlock(
-                                          '${widget.user.birthlong!.toStringAsFixed(2)} / ${widget.user.birthlat!.toStringAsFixed(4)}',
-                                          1),
+                                          '${widget.user.birthlong!.toStringAsFixed(2)} / ${widget.user.birthlat!.toStringAsFixed(2)}',
+                                          0),
                                       textBlock(
                                           grahaData[1]['D01']!['Deg']![0]
                                               .toString(),
-                                          1),
-                                      textBlock('NA', 1),
-                                      textBlock(dayOfWeek, 1),
+                                          0),
+                                      textBlock('NA', 0),
+                                      textBlock(dayOfWeek, 0),
                                       textBlock(
                                           '${grahaData[1]['D01']!['NkN']![2]} - ${grahaData[1]['D01']!['NkL']![2]}',
-                                          1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
-                                      textBlock(sunTimes[0], 1),
-                                      textBlock(sunTimes[1], 1),
-                                      textBlock('NA', 1),
-                                      textBlock('23.29472°', 1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
-                                      textBlock('NA', 1),
+                                          0),
+                                      textBlock('NA', 0),
+                                      textBlock('NA', 0),
+                                      textBlock('NA', 0),
+                                      textBlock('NA', 0),
+                                      textBlock('NA', 0),
+                                      textBlock(sunTimes[0], 0),
+                                      textBlock(sunTimes[1], 0),
+                                      textBlock('NA', 0),
+                                      textBlock('23.29472°', 0),
+                                      textBlock(
+                                          widget.user.upapos!.split(',')[0], 0),
+                                      textBlock('NA', 0),
+                                      textBlock('NA', 0),
                                     ],
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [textBlock('Second Row', 0)],
                                   ),
                                 ],
                               ),
@@ -424,15 +431,20 @@ class _BasicsScreen2State extends State<BasicsScreen2>
   }
 
   Widget textBlock(String text, int txtstyle) {
-    return txtstyle == 1
+    return txtstyle == 0
         ? Text(
             text,
-            style: paraStyle,
-          )
-        : Text(
-            text,
             style: paraBoldStyle,
-          );
+          )
+        : txtstyle == 1
+            ? Text(
+                text,
+                style: paraStyle,
+              )
+            : Text(
+                text,
+                style: titleStyle,
+              );
   }
 
   Widget _dataColumn(double wdth, double hgt, String txt, int txtstyl) {

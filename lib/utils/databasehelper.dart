@@ -53,6 +53,7 @@ class DatabaseHelper {
       ${Users.colUserBSpeed} TEXT NOT NULL, 
       ${Users.colUserTPos} TEXT NOT NULL,
       ${Users.colUserTSpeed} TEXT NOT NULL,
+      ${Users.colUserUPos} TEXT NOT NULL,
       ${Users.colUserStamp} TEXT NOT NULL
     )
     ''');
@@ -310,7 +311,7 @@ class DatabaseHelper {
      SELECT * FROM ${Upagrahas.tblUpa}
     ''');
 
-    // print('From DB Upa: $res');
+    //print('From DB Upa: $res');
     return res.isEmpty ? [] : res.map((e) => Upagrahas.fromMap(e)).toList();
   }
 }
